@@ -24,17 +24,22 @@ public class Player extends Entity {
 
     public void setDefaultValues() {
         x = 100;
-        y = 400;
+        y = 433;
         speed = 5;
         direction = "right";
+        defaultMap = 2;
+    }
+
+    public void setPlayerPosition(int x) {
+        this.x = x;
     }
 
     public void getPlayerImage() {
         try {
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/player/playerR1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/res/player/playerR2.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/player/playerL1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/res/player/playerL2.png"));
+            right1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerR1.png"));
+            right2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerR2.png"));
+            left1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerL1.png"));
+            left2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerL2.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,16 +47,19 @@ public class Player extends Entity {
 
     public void update() {
         if (keyHandler.rightPressed || keyHandler.leftPressed) {
+
             if (keyHandler.rightPressed == true) {
                 direction = "right";
                 x += speed;
             }
+
             if (keyHandler.leftPressed == true) {
                 direction = "left";
                 x -= speed;
             }
+
             spriteCount++;
-            if (spriteCount > 10) {
+            if (spriteCount > 5) {
                 if (spriteNum == 1) {
                     spriteNum = 2;
                 } else if (spriteNum == 2) {
@@ -59,7 +67,8 @@ public class Player extends Entity {
                 }
                 spriteCount = 0;
             }
-        }
+        } else
+            spriteNum = 1;
     }
 
     public void draw(Graphics2D g2) {
