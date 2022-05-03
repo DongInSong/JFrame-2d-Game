@@ -19,7 +19,7 @@ public class MapManager {
     Player player;
     Map[] map;
     int mapImageNum[][];
-    String portal[][];
+    public String portal[][];
 
     int totalMap = 4;
     int portalInfo = 4; // [4] Map Code, Current Map, Previous Map, Next Map
@@ -57,7 +57,7 @@ public class MapManager {
 
     public void loadPortal() {
         try {
-            InputStream is = getClass().getResourceAsStream("/res/maps/portal.txt");
+            InputStream is = getClass().getResourceAsStream("/res/Maps/portal.txt");
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int col = 0;

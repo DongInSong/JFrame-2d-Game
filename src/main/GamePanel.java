@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import entity.Player;
 import map.MapManager;
+import object.ObjectInfo;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -23,11 +24,13 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenhight = tileSize * maxScreenRow; // 576
     public int FPS;
 
-    KeyHandler keyHandler = new KeyHandler();
+    KeyHandler keyHandler = new KeyHandler(this);
     Thread gameThread;
-    Player player = new Player(this, keyHandler);
-    MapManager mapManager = new MapManager(this, player);
-
+    public Player player = new Player(this, keyHandler);
+    public MapManager mapManager = new MapManager(this, player);
+    public AssetManager assetManager = new AssetManager(this);
+    public ObjectInfo obj[] = new ObjectInfo[10];
+    
 
 
     public GamePanel() {
@@ -37,6 +40,10 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
+    }
+
+    public void setupGame(){
+        assetManager.setObject();
     }
 
     public void startGameThread() {
@@ -110,9 +117,20 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
+        // MAP
         mapManager.draw(g2);
+
+        // OBJECT
+        for(int i = 0 ; i<obj.length; i++){
+            if(obj[i] != null){
+                obj[i].draw(g2, this);
+            }
+        }
+
+        // PLAYER
         player.draw(g2);
 
+        // DEBUG
         if(keyHandler.showDebug == true){
             g2.setFont(new Font("Arial", Font.PLAIN, 20));
             g2.setColor(Color.BLACK);
