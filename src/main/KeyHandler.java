@@ -42,7 +42,7 @@ public class KeyHandler implements KeyListener {
         }
 
         if(code == KeyEvent.VK_O){
-            gamePanel.assetManager.resetObject();
+            
         }
 
     }
