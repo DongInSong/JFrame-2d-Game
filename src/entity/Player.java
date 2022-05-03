@@ -38,8 +38,10 @@ public class Player extends Entity {
         try {
             right1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerR1.png"));
             right2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerR2.png"));
+
             left1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerL1.png"));
             left2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerL2.png"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,13 +62,27 @@ public class Player extends Entity {
 
             spriteCount++;
             if (spriteCount > 5) {
-                if (spriteNum == 1) {
-                    spriteNum = 2;
-                } else if (spriteNum == 2) {
-                    spriteNum = 1;
-                }
-                spriteCount = 0;
+            if (spriteNum == 1) {
+            spriteNum = 2;
+            } else if (spriteNum == 2) {
+            spriteNum = 1;
             }
+            spriteCount = 0;
+            }
+            // if (spriteCount > 5) {
+            //     if (spriteNum == 1) {
+            //         spriteNum = 2;
+            //     } else if (spriteNum == 2) {
+            //         spriteNum = 3;
+            //     } else if (spriteNum == 3) {
+            //         spriteNum = 4;
+            //     } else if (spriteNum == 4) {
+            //         spriteNum = 5;
+            //     } else if (spriteNum == 5) {
+            //         spriteNum = 1;
+            //     }
+            //     spriteCount = 0;
+            // }
         } else
             spriteNum = 1;
     }
@@ -81,14 +97,28 @@ public class Player extends Entity {
                     image = right1;
                 } else if (spriteNum == 2) {
                     image = right2;
-                }
+                } 
+                // else if (spriteNum == 3) {
+                //     image = right3;
+                // } else if (spriteNum == 4) {
+                //     image = right4;
+                // } else if (spriteNum == 5) {
+                //     image = right5;
+                // }
                 break;
             case "left":
                 if (spriteNum == 1) {
                     image = left1;
                 } else if (spriteNum == 2) {
                     image = left2;
-                }
+                } 
+                // else if (spriteNum == 3) {
+                //     image = left3;
+                // } else if (spriteNum == 4) {
+                //     image = left4;
+                // } else if (spriteNum == 5) {
+                //     image = left5;
+                // }
                 break;
         }
         g2.drawImage(image, x, y, gamePanel.tileSize, gamePanel.tileSize, null);

@@ -10,7 +10,13 @@ import javax.swing.JPanel;
 
 import entity.Player;
 import map.MapManager;
-import object.ObjectInfo;
+import object.Monster;
+import object.Object;
+
+import java.awt.Rectangle;
+import java.lang.String;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -29,9 +35,8 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player = new Player(this, keyHandler);
     public MapManager mapManager = new MapManager(this, player);
     public AssetManager assetManager = new AssetManager(this);
-    public ObjectInfo obj[] = new ObjectInfo[10];
-    
-
+    public Object obj[] = new Object[10];
+    public Monster monster[] = new Monster[10];
 
     public GamePanel() {
 
@@ -42,8 +47,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
     }
 
-    public void setupGame(){
+    public void setupGame() {
         assetManager.setObject();
+        assetManager.setMonster();
     }
 
     public void startGameThread() {
@@ -63,53 +69,42 @@ public class GamePanel extends JPanel implements Runnable {
         long timer = 0;
         int drawCount = 0;
 
-        //double nextDrawTime = System.nanoTime() + drawInterval;
-
         while (gameThread != null) {
-            // System.out.println("Running");
 
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             timer += (currentTime - lastTime);
             lastTime = currentTime;
 
-            if(delta >= 1){
+            if (delta >= 1) {
                 update();
                 repaint();
                 delta--;
                 drawCount++;
             }
 
-            if(timer >= 1000000000){
+            if (timer >= 1000000000) {
                 FPS = drawCount;
                 drawCount = 0;
-                timer=0;
+                timer = 0;
             }
-
-            // try {
-            //     double remainingTime = nextDrawTime - System.nanoTime();
-            //     remainingTime = remainingTime / 1000000;
-
-            //     if (remainingTime < 0) {
-            //         remainingTime = 0;
-            //     }
-
-                
-            //     Thread.sleep((long) remainingTime);
-            //     nextDrawTime += drawInterval;
-                
-
-            // } catch (InterruptedException e) {
-            //     // TODO Auto-generated catch block
-            //     e.printStackTrace();
-            // }
         }
+    }
 
+    public void monseterRefresh() {
+        assetManager.setMonster();
     }
 
     public void update() {
         player.update();
-        mapManager.MapChange();
+        mapManager.mapChange();
+        for (int i = 0; i < monster.length; i++) {
+            if (monster[i] != null) {
+                if (mapManager.mapName.equals(monster[i].mapName)) {
+                    monster[i].update();
+                }
+            }
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -121,9 +116,16 @@ public class GamePanel extends JPanel implements Runnable {
         mapManager.draw(g2);
 
         // OBJECT
-        for(int i = 0 ; i<obj.length; i++){
-            if(obj[i] != null){
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
                 obj[i].draw(g2, this);
+            }
+        }
+
+        // MONSTER
+        for (int i = 0; i < monster.length; i++) {
+            if (monster[i] != null) {
+                monster[i].draw(g2, this);
             }
         }
 
@@ -131,7 +133,7 @@ public class GamePanel extends JPanel implements Runnable {
         player.draw(g2);
 
         // DEBUG
-        if(keyHandler.showDebug == true){
+        if (keyHandler.showDebug == true) {
             g2.setFont(new Font("Arial", Font.PLAIN, 20));
             g2.setColor(Color.BLACK);
             int x = 20;
@@ -139,12 +141,54 @@ public class GamePanel extends JPanel implements Runnable {
             int lineHeight = 20;
 
             g2.drawString("Debug ----", x, y);
-            g2.drawString("FPS: "+ FPS, x+340, y);y+=lineHeight;
-            g2.drawString("X: "+ player.x, x, y);y+=lineHeight;
-            g2.drawString("Map: "+ mapManager.mapName, x, y);y+=lineHeight;
+            g2.drawString("FPS: " + FPS, x + 340, y);
+            y += lineHeight;
+            g2.drawString("X: " + player.x, x, y);
+            y += lineHeight;
+            g2.drawString("Map: " + mapManager.mapName, x, y);
+            y += lineHeight;
+            g2.drawString("Map_Index: " + mapManager.currentMap, x, y);
+            y += lineHeight;
+
+
+            // OBJECT REDBOX
+            for (int i = 0; i < obj.length; i++) {
+                if (obj[i] != null) {
+                    if (mapManager.mapName.equals(obj[i].mapName)) {
+                        g2.setColor(new Color(0, 0, 255, 150));
+                        g2.fillRect(obj[i].mapX, obj[i].mapY, obj[i].objImg.getWidth(), obj[i].objImg.getHeight());
+                    }
+                }
+            }
+
+            // MONSTER REDBOX
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] != null) {
+                    if (mapManager.mapName.equals(monster[i].mapName)) {
+                        g2.setColor(new Color(255, 0, 0, 150));
+                        g2.fillRect(monster[i].mapX, monster[i].mapY, tileSize, tileSize);
+                    }
+                }
+            }
 
         }
-
         g2.dispose();
+    }
+
+    public void centerString(Graphics2D g, Rectangle r, String s,
+            Font font) {
+        FontRenderContext frc = new FontRenderContext(null, true, true);
+
+        Rectangle2D r2D = font.getStringBounds(s, frc);
+        int rWidth = (int) Math.round(r2D.getWidth());
+        int rHeight = (int) Math.round(r2D.getHeight());
+        int rX = (int) Math.round(r2D.getX());
+        int rY = (int) Math.round(r2D.getY());
+
+        int a = (r.width / 2) - (rWidth / 2) - rX;
+        int b = (r.height / 2) - (rHeight / 2) - rY;
+
+        g.setFont(font);
+        g.drawString(s, r.x + a, r.y + b);
     }
 }

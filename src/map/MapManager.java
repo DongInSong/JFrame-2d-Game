@@ -4,13 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import javax.imageio.ImageIO;
-
 import entity.Player;
-
 import java.awt.Graphics2D;
-
 import main.GamePanel;
 
 public class MapManager {
@@ -21,9 +17,8 @@ public class MapManager {
     int mapImageNum[][];
     public String portal[][];
 
-    int totalMap = 4;
+    int totalMap;
     int portalInfo = 4; // [4] Map Code, Current Map, Previous Map, Next Map
-
     public int currentMap;
     public String mapName;
 
@@ -31,27 +26,69 @@ public class MapManager {
 
         this.gamePanel = gamePanel;
         this.player = player;
+        getTotalMap();
         map = new Map[10];
         mapImageNum = new int[gamePanel.maxScreenCol][gamePanel.maxScreenRow];
         portal = new String[totalMap][portalInfo];
-
-        currentMap = (player.defaultMap - 1);
+        currentMap = player.defaultMap;
 
         getMapImage();
         loadPortal();
         loadMap(portal[currentMap][1]);
     }
 
-    public void MapChange() {
-        if (player.x > 450) {
+    public int getTotalMap() {
+        try {
+            InputStream is = getClass().getResourceAsStream("/res/Maps/portal.txt");
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            while (br.readLine() != null) {
+                totalMap++;
+            }
+            System.out.println("Portal Data: " + totalMap);
+            br.close();
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+        return totalMap;
+
+    }
+
+    public void getCurrentMap() {
+        for (int i = 0; i < portal.length; i++) {
+            if (portal[i][1].equals(mapName)) {
+                currentMap = Integer.parseInt(portal[i][0]);
+            }
+        }
+    }
+
+    public void monstersInMap() {
+        for (int i = 0; i < gamePanel.obj.length; i++) {
+            if (gamePanel.monster[i] != null) {
+                if (mapName.equals(gamePanel.monster[i].mapName)) {
+                    gamePanel.monster[i].setAction();
+                    System.out.println("monster " + i + " in this map ("+mapName+")");
+                }
+            }
+        }
+    }
+
+    public void mapChange() {
+        if (player.x > 460) {
             player.setPlayerPosition(-25);
             loadMap(portal[currentMap][3]);
-            currentMap++;
+            getCurrentMap();
 
-        } else if (player.x < -25) {
+            // RESET OBJECT (MONSTER)
+            gamePanel.monseterRefresh();
+
+        } else if (player.x < -35) {
             player.setPlayerPosition(450);
             loadMap(portal[currentMap][2]);
-            currentMap--;
+            getCurrentMap();
+
+            // RESET OBJECT (MONSTER)
+            gamePanel.monseterRefresh();
+
         }
     }
 
@@ -81,7 +118,7 @@ public class MapManager {
 
             for (int i = 0; i < totalMap; i++) {
                 for (int j = 0; j < portalInfo; j++) {
-                    System.out.print(portal[i][j]+" ");
+                    System.out.print(portal[i][j] + " ");
                 }
                 System.out.println();
             }
@@ -104,6 +141,12 @@ public class MapManager {
             map[3].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/Grassbottom2.png"));
             map[4] = new Map();
             map[4].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/Grasstop2.png"));
+            map[5] = new Map();
+            map[5].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/blocktop.png"));
+            map[6] = new Map();
+            map[6].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/blockbottom.png"));
+            map[7] = new Map();
+            map[7].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/floor.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
