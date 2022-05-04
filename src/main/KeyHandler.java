@@ -41,8 +41,8 @@ public class KeyHandler implements KeyListener {
             }
         }
 
-        if(code == KeyEvent.VK_O){
-            
+        if(code == KeyEvent.VK_1){
+            gamePanel.mapManager.teleport(7);
         }
 
     }

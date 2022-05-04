@@ -147,7 +147,9 @@ public class GamePanel extends JPanel implements Runnable {
             y += lineHeight;
             g2.drawString("Map: " + mapManager.mapName, x, y);
             y += lineHeight;
-            g2.drawString("Map_Index: " + mapManager.currentMap, x, y);
+            g2.drawString("Map_Index: " + mapManager.portalIndex, x, y);
+            y += lineHeight;
+            g2.drawString("Map_code: " + mapManager.mapCode, x, y);
             y += lineHeight;
 
 

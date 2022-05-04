@@ -13,30 +13,47 @@ public class MapManager {
 
     GamePanel gamePanel;
     Player player;
-    Map[] map;
-    int mapImageNum[][];
-    public String portal[][];
+    Map[] map; // Map Tile Images
+    private int mapImageNum[][];
+    private String portal[][];
 
-    int totalMap;
-    int portalInfo = 4; // [4] Map Code, Current Map, Previous Map, Next Map
-    public int currentMap;
+    private int totalMap;
+    private int portalInfo = 4; // [4] Map Code, Current Map, Previous Map, Next Map
+
     public String mapName;
+    public int mapCode;
+    public int portalIndex;
 
     public MapManager(GamePanel gamePanel, Player player) {
 
         this.gamePanel = gamePanel;
         this.player = player;
-        getTotalMap();
+
         map = new Map[10];
         mapImageNum = new int[gamePanel.maxScreenCol][gamePanel.maxScreenRow];
+
+        getTotalMap();
         portal = new String[totalMap][portalInfo];
-        currentMap = player.defaultMap;
+
+        System.out.println("포탈 데이터 생성 완료");
+        System.out.println("Portal Data: " + totalMap);
+
+        mapCode = player.defaultMap;
 
         getMapImage();
+        System.out.println("맵 이미지 불러오기 완료");
+
         loadPortal();
-        loadMap(portal[currentMap][1]);
+        getMapInfo();
+        System.out.println("포탈 불러오기 완료");
+
+        getPortalIndex();
+        loadMap(portal[portalIndex][1]);
+        System.out.println("맵 로딩 성공");
+
     }
 
+    // FOR LOAD PORTAL
     public int getTotalMap() {
         try {
             InputStream is = getClass().getResourceAsStream("/res/Maps/portal.txt");
@@ -44,7 +61,6 @@ public class MapManager {
             while (br.readLine() != null) {
                 totalMap++;
             }
-            System.out.println("Portal Data: " + totalMap);
             br.close();
         } catch (Exception e) {
             e.getStackTrace();
@@ -53,12 +69,39 @@ public class MapManager {
 
     }
 
-    public void getCurrentMap() {
+    // MAP INFORMATIONS
+    public void getMapInfo(){
+        for (int i = 0; i < totalMap; i++) {
+            for (int j = 0; j < portalInfo; j++) {
+                System.out.print(portal[i][j]+" ");
+            }
+            System.out.println();
+        }
+    }
+
+    public void getMapCode() {
         for (int i = 0; i < portal.length; i++) {
             if (portal[i][1].equals(mapName)) {
-                currentMap = Integer.parseInt(portal[i][0]);
+                mapCode = Integer.parseInt(portal[i][0]);
             }
         }
+    }
+
+    public void getPortalIndex() {
+        for (int i = 0; i < portal.length; i++) {
+            if (portal[i][0].equals(mapCode + "")) {
+                portalIndex = i;
+            }
+        }
+    }
+
+    public boolean isExistMap(int map) {
+        for (int i = 0; i < portal.length; i++) {
+            if (portal[i][0].equals(map + "")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void monstersInMap() {
@@ -66,25 +109,37 @@ public class MapManager {
             if (gamePanel.monster[i] != null) {
                 if (mapName.equals(gamePanel.monster[i].mapName)) {
                     gamePanel.monster[i].setAction();
-                    System.out.println("monster " + i + " in this map ("+mapName+")");
+                    System.out.println("monster " + i + " in this map (" + mapName + ")");
                 }
             }
         }
     }
 
+    // MAP CHANGE
+    public void teleport(int mapCode){
+        if(isExistMap(mapCode)){
+            this.mapCode=mapCode;
+            getPortalIndex();
+            loadMap(portal[portalIndex][1]);
+        }  
+        else System.out.println("Teleport failed");
+}
+
     public void mapChange() {
         if (player.x > 460) {
             player.setPlayerPosition(-25);
-            loadMap(portal[currentMap][3]);
-            getCurrentMap();
+            loadMap(portal[portalIndex][3]);
+            getMapCode();
+            getPortalIndex();
 
             // RESET OBJECT (MONSTER)
             gamePanel.monseterRefresh();
 
         } else if (player.x < -35) {
             player.setPlayerPosition(450);
-            loadMap(portal[currentMap][2]);
-            getCurrentMap();
+            loadMap(portal[portalIndex][2]);
+            getMapCode();
+            getPortalIndex();
 
             // RESET OBJECT (MONSTER)
             gamePanel.monseterRefresh();
@@ -115,19 +170,12 @@ public class MapManager {
                 }
             }
             br.close();
-
-            for (int i = 0; i < totalMap; i++) {
-                for (int j = 0; j < portalInfo; j++) {
-                    System.out.print(portal[i][j] + " ");
-                }
-                System.out.println();
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    // MAP IMAGE LOAD
     public void getMapImage() {
 
         try {
@@ -153,6 +201,7 @@ public class MapManager {
         }
     }
 
+    // MAP LOAD
     public void loadMap(String mapName) {
         this.mapName = mapName;
 
