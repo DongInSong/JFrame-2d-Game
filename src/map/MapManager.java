@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
+
 import entity.Player;
+
 import java.awt.Graphics2D;
 import main.GamePanel;
+import main.UtilityTool;
 
 public class MapManager {
 
@@ -15,11 +18,10 @@ public class MapManager {
     Player player;
     Map[] map; // Map Tile Images
     private int mapImageNum[][];
-    private String portal[][];
-
     private int totalMap;
     private int portalInfo = 4; // [4] Map Code, Current Map, Previous Map, Next Map
-
+    
+    public String portal[][];
     public String mapName;
     public int mapCode;
     public int portalIndex;
@@ -70,10 +72,10 @@ public class MapManager {
     }
 
     // MAP INFORMATIONS
-    public void getMapInfo(){
+    public void getMapInfo() {
         for (int i = 0; i < totalMap; i++) {
             for (int j = 0; j < portalInfo; j++) {
-                System.out.print(portal[i][j]+" ");
+                System.out.print(portal[i][j] + " ");
             }
             System.out.println();
         }
@@ -95,9 +97,18 @@ public class MapManager {
         }
     }
 
-    public boolean isExistMap(int map) {
+    public boolean isExistMap(String mapName) {
         for (int i = 0; i < portal.length; i++) {
-            if (portal[i][0].equals(map + "")) {
+            if (portal[i][1].equals(mapName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isExistMap(int mapCode) {
+        for (int i = 0; i < portal.length; i++) {
+            if (portal[i][0].equals(mapCode+"")) {
                 return true;
             }
         }
@@ -116,33 +127,36 @@ public class MapManager {
     }
 
     // MAP CHANGE
-    public void teleport(int mapCode){
-        if(isExistMap(mapCode)){
-            this.mapCode=mapCode;
+    public void teleport(int mapCode) {
+        if (isExistMap(mapCode)) {
+            this.mapCode = mapCode;
             getPortalIndex();
+            player.setPlayerPosition(100);
             loadMap(portal[portalIndex][1]);
-        }  
-        else System.out.println("Teleport failed");
-}
+        } else
+            System.out.println("Teleport failed");
+    }
 
     public void mapChange() {
-        if (player.x > 460) {
-            player.setPlayerPosition(-25);
-            loadMap(portal[portalIndex][3]);
-            getMapCode();
-            getPortalIndex();
+        if (player.x > 470) {
 
-            // RESET OBJECT (MONSTER)
-            gamePanel.monseterRefresh();
+                player.setPlayerPosition(-25);
+                loadMap(portal[portalIndex][3]);
+                getMapCode();
+                getPortalIndex();
+
+                // RESET OBJECT (MONSTER)
+                gamePanel.monseterRefresh();
 
         } else if (player.x < -35) {
-            player.setPlayerPosition(450);
-            loadMap(portal[portalIndex][2]);
-            getMapCode();
-            getPortalIndex();
+    
+                player.setPlayerPosition(460);
+                loadMap(portal[portalIndex][2]);
+                getMapCode();
+                getPortalIndex();
 
-            // RESET OBJECT (MONSTER)
-            gamePanel.monseterRefresh();
+                // RESET OBJECT (MONSTER)
+                gamePanel.monseterRefresh();
 
         }
     }
@@ -178,24 +192,23 @@ public class MapManager {
     // MAP IMAGE LOAD
     public void getMapImage() {
 
-        try {
-            map[0] = new Map();
-            map[0].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/sky.png"));
-            map[1] = new Map();
-            map[1].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/Grassbottom.png"));
-            map[2] = new Map();
-            map[2].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/Grasstop.png"));
-            map[3] = new Map();
-            map[3].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/Grassbottom2.png"));
-            map[4] = new Map();
-            map[4].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/Grasstop2.png"));
-            map[5] = new Map();
-            map[5].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/blocktop.png"));
-            map[6] = new Map();
-            map[6].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/blockbottom.png"));
-            map[7] = new Map();
-            map[7].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/floor.png"));
+        setup(0, "sky");
+        setup(1, "Grassbottom");
+        setup(2, "Grasstop");
+        setup(3, "Grassbottom2");
+        setup(4, "Grasstop2");
+        setup(5, "blocktop");
+        setup(6, "blockbottom");
+        setup(7, "floor");
 
+    }
+
+    public void setup(int Index, String imageName) {
+        UtilityTool utilityTool = new UtilityTool();
+        try {
+            map[Index] = new Map();
+            map[Index].image = ImageIO.read(getClass().getResourceAsStream("/res/Images/map/" + imageName + ".png"));
+            map[Index].image = utilityTool.scaleImage(map[Index].image, gamePanel.tileSize, gamePanel.tileSize);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -220,11 +233,10 @@ public class MapManager {
 
                     String numbers[] = line.split(" ");
                     int num = Integer.parseInt(numbers[col]);
-
+                    
                     mapImageNum[col][row] = num;
                     col++;
                 }
-
                 if (col == gamePanel.maxScreenCol) {
                     col = 0;
                     row++;
@@ -249,7 +261,7 @@ public class MapManager {
         while (col < gamePanel.maxScreenCol && row < gamePanel.maxScreenRow) {
             int tileNum = mapImageNum[col][row];
 
-            g2.drawImage(map[tileNum].image, x, y, gamePanel.tileSize, gamePanel.tileSize, null);
+            g2.drawImage(map[tileNum].image, x, y, null);
             col++;
             x += gamePanel.tileSize;
 

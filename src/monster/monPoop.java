@@ -1,60 +1,43 @@
-package object;
+package monster;
 
-import java.io.IOException;
 import java.util.Random;
-
-import javax.imageio.ImageIO;
+import main.GamePanel;
 
 public class monPoop extends Monster {
 
-    public monPoop(String mapName) {
-
+    public monPoop(GamePanel gamePanel, String mapName) {
+        super(gamePanel);
         this.mapName = mapName;
         monName = "poop";
         monLv = 8;
-
-        try {
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_1R.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_2R.png"));
-            right3 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_3R.png"));
-            right4 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_4R.png"));
-            right5 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_5R.png"));
-
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_1L.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_2L.png"));
-            left3 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_3L.png"));
-            left4 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_4L.png"));
-            left5 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_5L.png"));
-        } catch (IOException e) {
-
-        }
         mapX = 200;
         mapY = 433;
+
+        getMonsterImage();
     }
 
-    public monPoop(String mapName, int mapX, int mapY) {
-
+    public monPoop(GamePanel gamePanel, String mapName, int mapX, int mapY) {
+        super(gamePanel);
         this.mapName = mapName;
         this.mapX = mapX;
         this.mapY = mapY;
         monName = "poop";
         monLv = 8;
 
-        try {
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_1R.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_2R.png"));
-            right3 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_3R.png"));
-            right4 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_4R.png"));
-            right5 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_5R.png"));
+        getMonsterImage();
+    }
 
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_1L.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_2L.png"));
-            left3 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_3L.png"));
-            left4 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_4L.png"));
-            left5 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/Poop_5L.png"));
-        } catch (IOException e) {
-
-        }
+    public void getMonsterImage(){
+        right1 = setup("Poop_1R");
+        right2 = setup("Poop_2R");
+        right3 = setup("Poop_3R");
+        right4 = setup("Poop_4R");
+        right5 = setup("Poop_5R");
+        left1 = setup("Poop_1L");
+        left2 = setup("Poop_2L");
+        left3 = setup("Poop_3L");
+        left4 = setup("Poop_4L");
+        left5 = setup("Poop_5L");
     }
 
     public void setAction() {

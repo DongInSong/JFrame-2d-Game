@@ -1,32 +1,25 @@
-package object;
+package monster;
 
-import java.io.IOException;
 import java.util.Random;
-
-import javax.imageio.ImageIO;
+import main.GamePanel;
 
 public class monSlime extends Monster {
 
-    public monSlime(String mapName) {
-
+    public monSlime(GamePanel gamePanel, String mapName) {
+        super(gamePanel);
+        
         this.mapName = mapName;
         monName = "slime";
         monLv = 5;
-
-        try {
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/slime.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/slime1.png"));
-
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/slime.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/slime1.png"));
-        } catch (IOException e) {
-
-        }
         mapX = 200;
         mapY = 433;
+
+        getMonsterImage();
     }
 
-    public monSlime(String mapName, int mapX, int mapY) {
+    
+    public monSlime(GamePanel gamePanel, String mapName, int mapX, int mapY) {
+        super(gamePanel);
 
         this.mapName = mapName;
         this.mapX = mapX;
@@ -34,14 +27,14 @@ public class monSlime extends Monster {
         monName = "slime";
         monLv = 5;
 
-        try {
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/slime.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/slime1.png"));
-
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/slime.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/monster/slime1.png"));
-        } catch (IOException e) {
-        }
+        getMonsterImage();
+    }
+    
+    public void getMonsterImage(){
+        right1 = setup("slime");
+        right2 = setup("slime1");
+        left1 = setup("slime");
+        left2 = setup("slime1");
     }
 
     public void setAction() {

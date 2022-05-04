@@ -2,11 +2,11 @@ package entity;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
 import main.KeyHandler;
+import main.UtilityTool;
 import main.GamePanel;
 
 public class Player extends Entity {
@@ -27,7 +27,7 @@ public class Player extends Entity {
         y = 433;
         speed = 5;
         direction = "right";
-        defaultMap = 2;
+        defaultMap = 1;
     }
 
     public void setPlayerPosition(int x) {
@@ -35,16 +35,25 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage() {
+
+        right1 = setup("PlayerR1");
+        right2 = setup("PlayerR2");
+        left1 = setup("PlayerL1");
+        left2 = setup("PlayerL2");
+
+    }
+
+    public BufferedImage setup(String imageName) {
+        UtilityTool utilityTool = new UtilityTool();
+        BufferedImage image = null;
+
         try {
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerR1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerR2.png"));
-
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerL1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/playerL2.png"));
-
-        } catch (IOException e) {
+            image = ImageIO.read(getClass().getResourceAsStream("/res/Images/player/" + imageName + ".png"));
+            image = utilityTool.scaleImage(image, gamePanel.tileSize, gamePanel.tileSize);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        return image;
     }
 
     public void update() {
@@ -52,36 +61,44 @@ public class Player extends Entity {
 
             if (keyHandler.rightPressed == true) {
                 direction = "right";
-                x += speed;
             }
 
-            if (keyHandler.leftPressed == true) {
+            else if (keyHandler.leftPressed == true) {
                 direction = "left";
-                x -= speed;
+            }
+
+            collisionOn = false;
+            gamePanel.collisionChecker.check(this);
+
+            if(collisionOn == false){
+                switch(direction){
+                    case "right": x += speed; break;
+                    case "left": x -= speed; break;
+                }
             }
 
             spriteCount++;
             if (spriteCount > 5) {
-            if (spriteNum == 1) {
-            spriteNum = 2;
-            } else if (spriteNum == 2) {
-            spriteNum = 1;
-            }
-            spriteCount = 0;
+                if (spriteNum == 1) {
+                    spriteNum = 2;
+                } else if (spriteNum == 2) {
+                    spriteNum = 1;
+                }
+                spriteCount = 0;
             }
             // if (spriteCount > 5) {
-            //     if (spriteNum == 1) {
-            //         spriteNum = 2;
-            //     } else if (spriteNum == 2) {
-            //         spriteNum = 3;
-            //     } else if (spriteNum == 3) {
-            //         spriteNum = 4;
-            //     } else if (spriteNum == 4) {
-            //         spriteNum = 5;
-            //     } else if (spriteNum == 5) {
-            //         spriteNum = 1;
-            //     }
-            //     spriteCount = 0;
+            // if (spriteNum == 1) {
+            // spriteNum = 2;
+            // } else if (spriteNum == 2) {
+            // spriteNum = 3;
+            // } else if (spriteNum == 3) {
+            // spriteNum = 4;
+            // } else if (spriteNum == 4) {
+            // spriteNum = 5;
+            // } else if (spriteNum == 5) {
+            // spriteNum = 1;
+            // }
+            // spriteCount = 0;
             // }
         } else
             spriteNum = 1;
@@ -97,13 +114,13 @@ public class Player extends Entity {
                     image = right1;
                 } else if (spriteNum == 2) {
                     image = right2;
-                } 
+                }
                 // else if (spriteNum == 3) {
-                //     image = right3;
+                // image = right3;
                 // } else if (spriteNum == 4) {
-                //     image = right4;
+                // image = right4;
                 // } else if (spriteNum == 5) {
-                //     image = right5;
+                // image = right5;
                 // }
                 break;
             case "left":
@@ -111,17 +128,17 @@ public class Player extends Entity {
                     image = left1;
                 } else if (spriteNum == 2) {
                     image = left2;
-                } 
+                }
                 // else if (spriteNum == 3) {
-                //     image = left3;
+                // image = left3;
                 // } else if (spriteNum == 4) {
-                //     image = left4;
+                // image = left4;
                 // } else if (spriteNum == 5) {
-                //     image = left5;
+                // image = left5;
                 // }
                 break;
         }
-        g2.drawImage(image, x, y, gamePanel.tileSize, gamePanel.tileSize, null);
+        g2.drawImage(image, x, y, null);
     }
 
 }

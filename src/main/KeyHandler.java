@@ -13,12 +13,10 @@ public class KeyHandler implements KeyListener {
 
     public boolean rightPressed, leftPressed, 
     //DEBUG KEY
-    showDebug;
+    showDebug, showDrawTime;
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -41,8 +39,35 @@ public class KeyHandler implements KeyListener {
             }
         }
 
+        if (code == KeyEvent.VK_ESCAPE) {
+            if (gamePanel.gameState == gamePanel.playState) {
+                gamePanel.gameState = gamePanel.pauseState;
+            } else if (gamePanel.gameState == gamePanel.pauseState) {
+                gamePanel.gameState = gamePanel.playState;
+            }
+        }
+
         if(code == KeyEvent.VK_1){
-            gamePanel.mapManager.teleport(7);
+            gamePanel.mapManager.teleport(6);
+        }
+
+        if(code == KeyEvent.VK_A){
+            if (gamePanel.player.collisionOn == false) {
+                gamePanel.player.collisionOn = true;
+            } else if (gamePanel.player.collisionOn == true) {
+                gamePanel.player.collisionOn = false;
+            } 
+        }
+
+        if(code == KeyEvent.VK_R){
+
+            // 몬스터 죽이기 TEST용 코드
+            int[] target = {1, 2, 3};
+            gamePanel.mapManager.monstersInMap();
+            // ------------------------
+
+            gamePanel.assetManager.removeMonster(target);
+
         }
 
     }
