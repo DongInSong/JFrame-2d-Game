@@ -4,6 +4,8 @@ import monster.Monster;
 import monster.monPoop;
 import monster.monSlime;
 import npc.npcA;
+import npc.npcB;
+import npc.npcC;
 
 public class AssetManager {
 
@@ -19,6 +21,8 @@ public class AssetManager {
 
     public void setNpc() {
         gamePanel.npc[0] = new npcA(gamePanel, "map01");
+        gamePanel.npc[1] = new npcB(gamePanel, "map03");
+        gamePanel.npc[2] = new npcC(gamePanel, "map03");
     }
 
     public void setMonster() {

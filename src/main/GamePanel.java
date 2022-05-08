@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.time.Month;
 
 import javax.swing.JPanel;
 
@@ -13,11 +14,7 @@ import map.MapManager;
 import monster.Monster;
 import npc.Npc;
 import object.Object;
-
-import java.awt.Rectangle;
-import java.lang.String;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
+import ui.Ui;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -42,6 +39,7 @@ public class GamePanel extends JPanel implements Runnable {
     public Object obj[] = new Object[10];
     public Monster monster[] = new Monster[10];
     public Npc npc[] = new Npc[10];
+    public Ui ui = new Ui(this);
 
     // GAME STATE
     public int gameState;
@@ -112,6 +110,7 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == playState) {
             player.update();
             mapManager.mapChange();
+            ui.update();
             for (int i = 0; i < monster.length; i++) {
                 if (monster[i] != null) {
                     if (mapManager.mapName.equals(monster[i].mapName)) {
@@ -128,7 +127,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
 
-        if(gameState == pauseState){
+        if (gameState == pauseState) {
 
         }
 
@@ -171,6 +170,9 @@ public class GamePanel extends JPanel implements Runnable {
         // PLAYER
         player.draw(g2);
 
+        // Ui
+        ui.draw(g2);
+
         // DEBUG
 
         if (keyHandler.showDrawTime == true) {
@@ -202,6 +204,24 @@ public class GamePanel extends JPanel implements Runnable {
             y += lineHeight;
             g2.drawString("Collision: " + player.collisionOn, x, y);
             y += lineHeight;
+            // NPC Collision
+            y += lineHeight;
+            for (int i = 0; i < npc.length; i++) {
+                if (npc[i] != null && npc[i].collisionOn) {
+                    if (mapManager.mapName.equals(npc[i].mapName)) {
+                        g2.drawString(npc[i].npcName, x+350, y);
+                    }
+                }
+            }
+             // Monster Collision
+            for (int i = 0; i < monster.length; i++) {
+                if (monster[i] !=null && monster[i].collisionOn) {
+                    if (mapManager.mapName.equals(monster[i].mapName)) {
+                        g2.drawString(monster[i].monName, x+350, y);
+                        y += lineHeight;
+                    }
+                }
+            }
 
             // OBJECT REDBOX
             for (int i = 0; i < obj.length; i++) {
@@ -225,22 +245,5 @@ public class GamePanel extends JPanel implements Runnable {
 
         }
         g2.dispose();
-    }
-
-    public void centerString(Graphics2D g, Rectangle r, String s,
-            Font font) {
-        FontRenderContext frc = new FontRenderContext(null, true, true);
-
-        Rectangle2D r2D = font.getStringBounds(s, frc);
-        int rWidth = (int) Math.round(r2D.getWidth());
-        int rHeight = (int) Math.round(r2D.getHeight());
-        int rX = (int) Math.round(r2D.getX());
-        int rY = (int) Math.round(r2D.getY());
-
-        int a = (r.width / 2) - (rWidth / 2) - rX;
-        int b = (r.height / 2) - (rHeight / 2) - rY;
-
-        g.setFont(font);
-        g.drawString(s, r.x + a, r.y + b);
     }
 }

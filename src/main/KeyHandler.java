@@ -7,13 +7,13 @@ public class KeyHandler implements KeyListener {
 
     GamePanel gamePanel;
 
-    public KeyHandler(GamePanel gamePanel){
+    public KeyHandler(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
     }
 
-    public boolean rightPressed, leftPressed, 
-    //DEBUG KEY
-    showDebug, showDrawTime;
+    public boolean rightPressed, leftPressed,
+            // DEBUG KEY
+            showDebug, showDrawTime;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -47,22 +47,22 @@ public class KeyHandler implements KeyListener {
             }
         }
 
-        if(code == KeyEvent.VK_1){
+        if (code == KeyEvent.VK_1) {
             gamePanel.mapManager.teleport(6);
         }
 
-        if(code == KeyEvent.VK_A){
-            if (gamePanel.player.collisionOn == false) {
-                gamePanel.player.collisionOn = true;
-            } else if (gamePanel.player.collisionOn == true) {
-                gamePanel.player.collisionOn = false;
-            } 
+        if (code == KeyEvent.VK_A) {
+            if (showDrawTime == false) {
+                showDrawTime = true;
+            } else if (showDrawTime == true) {
+                showDrawTime = false;
+            }
         }
 
-        if(code == KeyEvent.VK_R){
+        if (code == KeyEvent.VK_R) {
 
             // 몬스터 죽이기 TEST용 코드
-            int[] target = {1, 2, 3};
+            int[] target = { 1, 2, 3 };
             gamePanel.mapManager.monstersInMap();
             // ------------------------
 

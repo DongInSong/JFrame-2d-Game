@@ -33,6 +33,7 @@ public class Npc {
     public String mapName;
     public int mapX;
     public int mapY;
+    public boolean collisionOn = false;
 
     UtilityTool utilityTool = new UtilityTool();
 
@@ -77,7 +78,6 @@ public class Npc {
     public void draw(Graphics2D g2) {
         Font font;
         
-        
         if (gamePanel.mapManager.mapName.equals(mapName)) {
             g2.drawImage(npcImg, mapX, mapY, null);
             
@@ -87,7 +87,11 @@ public class Npc {
 
             g2.setColor(Color.WHITE);
             font = (g2.getFont().deriveFont(Font.BOLD, 10));
-            gamePanel.centerString(g2, r, npcName, font);
+            utilityTool.centerString(g2, r, npcName, font);
+            
+            // if(collisionOn){
+            //     g2.drawImage(gamePanel.ui.space, mapX, mapY-55, null);
+            // }
         }
     }
 }

@@ -36,6 +36,7 @@ public class Monster {
     public String mapName;
     public int mapX;
     public int mapY;
+    public boolean collisionOn = false;
 
     UtilityTool utilityTool = new UtilityTool();
 
@@ -76,7 +77,7 @@ public class Monster {
 
             g2.setColor(Color.WHITE);
             font = (g2.getFont().deriveFont(Font.BOLD, 10));
-            gamePanel.centerString(g2, r, monName, font);
+            utilityTool.centerString(g2, r, monName, font);
         }
     }
 }
