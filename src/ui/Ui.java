@@ -27,7 +27,7 @@ public class Ui {
 
     public void update() {
         gamePanel.collisionChecker.npcCheck();
-        gamePanel.collisionChecker.monsterCheck();
+        //gamePanel.collisionChecker.monsterCheck();
     }
 
     public void getUiImage() {

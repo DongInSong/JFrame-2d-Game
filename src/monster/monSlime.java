@@ -7,7 +7,7 @@ public class monSlime extends Monster {
 
     public monSlime(GamePanel gamePanel, String mapName) {
         super(gamePanel);
-        
+
         this.mapName = mapName;
         monName = "slime";
         monLv = 5;
@@ -17,7 +17,6 @@ public class monSlime extends Monster {
         getMonsterImage();
     }
 
-    
     public monSlime(GamePanel gamePanel, String mapName, int mapX, int mapY) {
         super(gamePanel);
 
@@ -29,8 +28,8 @@ public class monSlime extends Monster {
 
         getMonsterImage();
     }
-    
-    public void getMonsterImage(){
+
+    public void getMonsterImage() {
         right1 = setup("slime");
         right2 = setup("slime1");
         left1 = setup("slime");
@@ -39,30 +38,49 @@ public class monSlime extends Monster {
 
     public void setAction() {
 
-        actionLockCounter++;
+        if (!stun) {
+            actionLockCounter++;
 
-        if (actionLockCounter == 120) {
-            Random random = new Random();
-            randomDirection = random.nextInt(100) + 1;
-            //System.out.println(randomDirection);
+            if (actionLockCounter == 120) {
+                Random random = new Random();
+                randomDirection = random.nextInt(100) + 1;
+                // System.out.println(randomDirection);
 
-            if (randomDirection <= 40) {
-                direction = "right";
+                if (randomDirection <= 40) {
+                    direction = "right";
+                }
+                if (randomDirection > 40 && randomDirection <= 60) {
+                    direction = "stop";
+                }
+                if (randomDirection > 60) {
+                    direction = "left";
+                }
+                actionLockCounter = 0;
             }
-            if (randomDirection > 40 && randomDirection <= 60) {
-                direction = "stop";
+        }
+
+        else if(stun){
+            switch(gamePanel.player.direction){
+                case "right":
+                for(int i = 10; i>0; i++){
+                    mapX += i;
+                } 
+                stun=false;
+                break;
+
+                case "left":
+                for(int i = 10; i>0; i++){
+                    mapX -= i;
+                } stun = false;
+                break;
             }
-            if (randomDirection > 60) {
-                direction = "left";
-            }
-            actionLockCounter = 0;
         }
     }
 
     public void update() {
-        
+
         setAction();
-        
+
         // RANDOM DIRECTION MOVE
         switch (direction) {
             case "right":

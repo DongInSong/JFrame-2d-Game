@@ -52,13 +52,14 @@ public class KeyHandler implements KeyListener {
         }
 
         if (code == KeyEvent.VK_A) {
-            if (showDrawTime == false) {
-                showDrawTime = true;
-            } else if (showDrawTime == true) {
-                showDrawTime = false;
-            }
-        }
 
+        }
+        
+        // if (showDrawTime == false) {
+        //     showDrawTime = true;
+        // } else if (showDrawTime == true) {
+        //     showDrawTime = false;
+        // }
         if (code == KeyEvent.VK_R) {
 
             // 몬스터 죽이기 TEST용 코드

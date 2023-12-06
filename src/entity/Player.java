@@ -36,10 +36,10 @@ public class Player extends Entity {
 
     public void getPlayerImage() {
 
-        right1 = setup("PlayerR1");
-        right2 = setup("PlayerR2");
-        left1 = setup("PlayerL1");
-        left2 = setup("PlayerL2");
+        right1 = setup("playerR1");
+        right2 = setup("playerR2");
+        left1 = setup("playerL1");
+        left2 = setup("playerL2");
 
     }
 

@@ -30,6 +30,7 @@ public class Monster {
     public String direction = "right";
     public int speed = 1;
     public int actionLockCounter = 118;
+    public boolean stun = false;
 
     // POSITION
     public int mapNum;

@@ -62,6 +62,7 @@ public class CollisionChecker {
                 if (gamePanel.mapManager.mapName.equals(gamePanel.monster[i].mapName)) {
                     if (gamePanel.player.x + 48 >= gamePanel.monster[i].mapX) {
                         gamePanel.monster[i].collisionOn = true;
+                        gamePanel.monster[i].stun = true;
                     } else
                         gamePanel.monster[i].collisionOn = false;
 
