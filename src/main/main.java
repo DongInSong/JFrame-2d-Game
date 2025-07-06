@@ -1,3 +1,6 @@
+// Code adapted from RyiSnow's 2D Java Game Programming tutorials
+// YouTube: https://www.youtube.com/@RyiSnow
+
 package main;
 
 import javax.swing.JFrame;
